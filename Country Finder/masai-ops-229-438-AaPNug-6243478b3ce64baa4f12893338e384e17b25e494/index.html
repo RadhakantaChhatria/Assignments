@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Country Finder</title>
+  <style>
+    /* Write all necessery css here  */
+    #all_countries {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      padding-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <select id="sort_population">
+    <option value="">Sort By Population</option>
+    <option value="asc">ASC</option>
+    <option value="desc">DESC</option>
+  </select>
+  <select id="filter_region">
+    <option value="">Filter By Region</option>
+    <option value="Africa">Africa</option>
+    <option value="Americas">Americas</option>
+    <option value="Asia">Asia</option>
+    <option value="Europe">Europe</option>
+    <option value="Oceania">Oceania</option>
+  </select>
+  <div id="all_countries">
+    <!-- Append Country Cards here  -->
+  </div>
+</body>
+
+<script>
+  // Write all necessery JS here
+  window.addEventListener("load", function () {
+   let selval= document.getElementById("sort_population")
+   selval.addEventListener("change", handleSort)
+    let regval=document.getElementById("filter_region")
+    regval.addEventListener("change", handleByRegion)
+    function handleSort() {
+      let data=JSON.parse(localStorage.getItem("userdata"))||[]
+
+      let selected = document.getElementById("sort_population").value
+      let newdata=data
+      // console.log("selected",selected,newdata)
+      console.log(regval.value,"fsdfds")
+      if(regval.value){
+        if(selected=="asc"){
+          
+          newdata=newdata.filter(e=>e.region==regval.value).sort((a,b)=>a.population-b.population)
+        }
+        else{
+          newdata=newdata.filter(e=>e.region==regval).sort((a,b)=>b.population-a.population)
+
+        }
+
+      }
+      else{
+        if(selected=="asc"){
+          
+          newdata=newdata.sort((a,b)=>a.population-b.population)
+        }
+        else{
+          newdata=newdata.sort((a,b)=>b.population-a.population)
+
+        }
+
+      }
+     display(newdata)
+     
+    
+    }
+    function handleByRegion(){
+      let region = document.getElementById("filter_region").value;
+      let data=JSON.parse(localStorage.getItem("userdata"))||[]
+      console.log(region,"region")
+      let newdata=data.filter(e=>e.region==region)
+      if(selval=="asc"){
+        newdata.sort((a,b)=>a.population-b.population)
+      }
+      else if(selval==="desc"){
+        newdata.sort((a,b)=>b.population-a.population)
+
+      }
+      
+      
+      display(newdata)
+    }
+    fetch(`https://restcountries.com/v3.1/all`)
+      .then((res) => res.json())
+      .then((data) => {display(data)
+      localStorage.setItem("userdata",JSON.stringify(data))
+      })
+      .catch((err) => console.log(err))
+  })
+
+  function display(data) {
+
+    document.getElementById("all_countries").innerHTML=null
+    // console.log("data", data)
+    data.forEach(e => {
+
+      let div = document.createElement("div")
+
+      let name = document.createElement("h3")
+      name.innerText = e.name.common
+
+      let Image = document.createElement("img")
+      Image.src = e.flags.png
+
+      let Population = document.createElement("p")
+      Population.innerText = e.population
+
+      let Region = document.createElement("p")
+      Region.innerText = e.region
+
+      let Capital = document.createElement("p")
+      Capital.innerText = e.capital
+
+      div.append(Image, name, Population, Region, Capital)
+      document.getElementById("all_countries").append(div)
+    });
+
+
+
+  }
+</script>
+
+</html>
+<!-- Country name(h3 tag) (data.name.common)
+Image of flag(img tag) (data.flags.png)
+Population(p tag) (data.population)
+Region(p tag) (data.region)
+Capital(p tag) (data.capital) -->

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Calculator</title>
+  </head>
+  <style>
+    div{
+      display: grid;
+    }
+    input{
+      width: 200px;
+
+    }
+    button{
+      width: 207px;
+      background-color: aqua;
+    }
+  </style>
+  <body>
+    <div>
+    <h1>BMI Calculator</h1>
+    <input placeholder="Height" type="number" id="height" />
+    <br>
+    <input placeholder="Weight" type="number" id="weight" />
+    <br>
+    <button id="calculate">Calculate</button>
+    <h1>
+      Your BMI is:- <span id="bmi"></span>, that means you are
+      <span id="status"></span>
+    </h1>
+  </div>
+  </body>
+
+</html>
+
+<script>
+    
+  var heightInput = document.querySelector("#height");
+  var weightInput = document.querySelector("#weight");
+  var calculateButton = document.querySelector("#calculate");
+  var result = document.querySelector("#bmi");
+  var statement = document.querySelector("#status");
+
+  calculateButton.addEventListener("click", ()=>{
+  var height = heightInput.value;
+  var weight = weightInput.value;
+  var BMI = weight/(height**2); 
+  
+  result.innerText = BMI.toFixed(1)
+
+  if(BMI < 18.5){
+      statement.innerText = "UnderWeight";    
+  }else if((BMI > 18.5) && (BMI < 24.9)){
+      statement.innerText = "Normal Weight";
+  }else if((BMI > 25) && (BMI < 29.9 )){
+      statement.innerText = "Overweight";
+  }else if((BMI >= 30)){
+      statement.innerText = "obese";
+  }
+  })
+
+</script>
